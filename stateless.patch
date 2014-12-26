@@ -1,0 +1,58 @@
+diff --git a/slsh/Makefile.in b/slsh/Makefile.in
+index b71b9bc..f558e78 100644
+--- a/slsh/Makefile.in
++++ b/slsh/Makefile.in
+@@ -28,6 +28,7 @@ MKINSDIR	= $(CONFIG_DIR)/autoconf/mkinsdir.sh
+ # Where system-wide slsh.rc, scripts, and library files reside
+ #----------------------------------------------------------------------------
+ SLSH_CONF_DIR	= @sysconfdir@
++SLSH_DEF_DIR	= $(datarootdir)/slsh
+ SLSH_LIB_DIR	= $(datarootdir)/slsh
+ SLSH_HELP_DIR	= $(SLSH_LIB_DIR)/help
+ SLSH_DOC_DIR	= $(datarootdir)/doc/slsh
+@@ -56,7 +57,7 @@ MAN_DIR		= @mandir@/man1
+ DEST_LIB_DIR	= -L$(DESTDIR)@libdir@
+ DEST_BIN_DIR	= $(DESTDIR)$(BIN_DIR)
+ DEST_MAN_DIR	= $(DESTDIR)$(MAN_DIR)
+-DEST_SLSH_CONF_DIR = $(DESTDIR)$(SLSH_CONF_DIR)
++DEST_SLSH_CONF_DIR = $(DESTDIR)$(SLSH_DEF_DIR)
+ DEST_SLSH_LIB_DIR  = $(DESTDIR)$(SLSH_LIB_DIR)
+ DEST_SLSH_HELP_DIR = $(DESTDIR)$(SLSH_HELP_DIR)
+ DEST_SLSH_LOCALLIB_DIR = $(DESTDIR)$(SLSH_LOCALLIB_DIR)
+@@ -72,7 +73,7 @@ SHELL = /bin/sh
+ INST_LIBS = $(DEST_LIB_DIR) $(RPATH) $(SLANG_INST_LIB) -lslang $(READLINE_LIB) $(OTHER_LIBS)
+ DEFS = -DSLSH_CONF_DIR='"$(SLSH_CONF_DIR)"' -DSLSH_PATH='"$(SLSH_LIB_DIR)"' \
+  -DSLSH_CONF_DIR_ENV='$(SLSH_CONF_DIR_ENV)' -DSLSH_LIB_DIR_ENV='$(SLSH_LIB_DIR_ENV)' \
+- -DSLSH_PATH_ENV='$(SLSH_PATH_ENV)'
++ -DSLSH_PATH_ENV='$(SLSH_PATH_ENV)' -DSLSH_DEF_DIR='"$(SLSH_DEF_DIR)"'
+ SRC_LIBS = $(SLANG_SRCLIB) -lslang $(READLINE_LIB) $(OTHER_LIBS)
+ #
+ all: $(OBJDIR)/slsh_exe
+diff --git a/slsh/slsh.c b/slsh/slsh.c
+index 9745543..78652b4 100644
+--- a/slsh/slsh.c
++++ b/slsh/slsh.c
+@@ -54,7 +54,11 @@ static char *Slsh_Version = "0.8.6-0";
+ 
+ #if defined(REAL_UNIX_SYSTEM) || defined(__APPLE__)
+ /* # define DEFAULT_LIBRARY_PATH "/usr/local/share/slsh:/usr/local/lib/slsh:/usr/share/slsh:/usr/lib/slsh"; */
++#ifdef SLSH_DEF_DIR
++# define DEFAULT_CONF_PATH "/usr/local/etc:/usr/local/etc/slsh:/etc:/etc/slsh:" SLSH_DEF_DIR;
++#else
+ # define DEFAULT_CONF_PATH "/usr/local/etc:/usr/local/etc/slsh:/etc:/etc/slsh";
++#endif
+ # define USER_SLSHRC ".slshrc"
+ #else
+ # define DEFAULT_CONF_PATH NULL
+@@ -342,7 +346,11 @@ static int load_startup_file (int is_interactive)
+    if (NULL == dir)
+      {
+ #ifdef SLSH_CONF_DIR
++#ifdef SLSH_DEF_DIR
++	dir = SLSH_CONF_DIR ":" SLSH_DEF_DIR;
++#else
+ 	dir = SLSH_CONF_DIR;
++#endif
+ 	if (dir != NULL)
+ 	  {
+ 	     status = try_to_load_file (dir, SLSHRC_FILE, NULL);
