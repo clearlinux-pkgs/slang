@@ -4,7 +4,7 @@
 #
 Name     : slang
 Version  : 2.2.4
-Release  : 14
+Release  : 15
 URL      : ftp://space.mit.edu/pub/davis/slang/v2.2/slang-2.2.4.tar.gz
 Source0  : ftp://space.mit.edu/pub/davis/slang/v2.2/slang-2.2.4.tar.gz
 Summary  : No detailed summary available
