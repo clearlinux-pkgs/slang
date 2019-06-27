@@ -6,3 +6,4 @@ zlib-dev
 onig-dev
 libpng-dev
 glibc-utils
+readline-dev

@@ -1,4 +1,5 @@
 PKG_NAME := slang
-URL := ftp://space.mit.edu/pub/davis/slang/v2.2/slang-2.2.4.tar.gz
+URL = https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
+ARCHIVES = 
 
 include ../common/Makefile.common
