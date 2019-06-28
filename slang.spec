@@ -6,16 +6,17 @@
 #
 Name     : slang
 Version  : 2.3.2
-Release  : 22
+Release  : 23
 URL      : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source0  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source99 : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2.asc
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : GPL-2.0+
+License  : GPL-2.0 GPL-2.0+
 Requires: slang-bin = %{version}-%{release}
 Requires: slang-data = %{version}-%{release}
 Requires: slang-lib = %{version}-%{release}
+Requires: slang-license = %{version}-%{release}
 Requires: slang-man = %{version}-%{release}
 BuildRequires : glibc-utils
 BuildRequires : libpng-dev
@@ -35,6 +36,7 @@ upgrading from version 1, then you should read these appendices.
 Summary: bin components for the slang package.
 Group: Binaries
 Requires: slang-data = %{version}-%{release}
+Requires: slang-license = %{version}-%{release}
 
 %description bin
 bin components for the slang package.
@@ -74,9 +76,18 @@ doc components for the slang package.
 Summary: lib components for the slang package.
 Group: Libraries
 Requires: slang-data = %{version}-%{release}
+Requires: slang-license = %{version}-%{release}
 
 %description lib
 lib components for the slang package.
+
+
+%package license
+Summary: license components for the slang package.
+Group: Default
+
+%description license
+license components for the slang package.
 
 
 %package man
@@ -96,7 +107,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1561581391
+export SOURCE_DATE_EPOCH=1561744710
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -116,8 +127,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make runtests
 
 %install
-export SOURCE_DATE_EPOCH=1561581391
+export SOURCE_DATE_EPOCH=1561744710
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/slang
+cp COPYING %{buildroot}/usr/share/package-licenses/slang/COPYING
 %make_install
 
 %files
@@ -286,6 +299,10 @@ rm -rf %{buildroot}
 /usr/lib64/slang/v2/modules/termios-module.so
 /usr/lib64/slang/v2/modules/varray-module.so
 /usr/lib64/slang/v2/modules/zlib-module.so
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/slang/COPYING
 
 %files man
 %defattr(0644,root,root,0755)
