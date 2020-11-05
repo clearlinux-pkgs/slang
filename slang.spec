@@ -6,10 +6,10 @@
 #
 Name     : slang
 Version  : 2.3.2
-Release  : 24
+Release  : 25
 URL      : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source0  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
-Source99 : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2.asc
+Source1  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2.asc
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
@@ -100,37 +100,38 @@ man components for the slang package.
 
 %prep
 %setup -q -n slang-2.3.2
+cd %{_builddir}/slang-2.3.2
 %patch1 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1561744710
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1604602439
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static --with-readline=gnu
-make  %{?_smp_mflags} -j1
+make  %{?_smp_mflags}  -j1
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make runtests
 
 %install
-export SOURCE_DATE_EPOCH=1561744710
+export SOURCE_DATE_EPOCH=1604602439
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/slang
-cp COPYING %{buildroot}/usr/share/package-licenses/slang/COPYING
+cp %{_builddir}/slang-2.3.2/COPYING %{buildroot}/usr/share/package-licenses/slang/a701894425273989c5e4d14cffb92a26b66cb08a
 %make_install
 
 %files
@@ -253,7 +254,8 @@ cp COPYING %{buildroot}/usr/share/package-licenses/slang/COPYING
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.h
+/usr/include/slang.h
+/usr/include/slcurses.h
 /usr/lib64/libslang.so
 /usr/lib64/pkgconfig/slang.pc
 
@@ -302,7 +304,7 @@ cp COPYING %{buildroot}/usr/share/package-licenses/slang/COPYING
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/slang/COPYING
+/usr/share/package-licenses/slang/a701894425273989c5e4d14cffb92a26b66cb08a
 
 %files man
 %defattr(0644,root,root,0755)
