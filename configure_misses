@@ -1,6 +1,12 @@
-Configure miss: slsyswrap
 Configure miss: X
-Configure miss: round
+Configure miss: X
+Configure miss: fpsetsticky in -lm
 Configure miss: fpsetsticky in -lm
 Configure miss: ncurses5-config
+Configure miss: ncurses5-config
+Configure miss: round
+Configure miss: round
+Configure miss: slsyswrap
+Configure miss: slsyswrap
+Configure miss: the iconv library and header files 
 Configure miss: the iconv library and header files 

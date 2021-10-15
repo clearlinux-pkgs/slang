@@ -6,7 +6,7 @@
 #
 Name     : slang
 Version  : 2.3.2
-Release  : 25
+Release  : 26
 URL      : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source0  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source1  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2.asc
@@ -15,6 +15,7 @@ Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
 Requires: slang-bin = %{version}-%{release}
 Requires: slang-data = %{version}-%{release}
+Requires: slang-filemap = %{version}-%{release}
 Requires: slang-lib = %{version}-%{release}
 Requires: slang-license = %{version}-%{release}
 Requires: slang-man = %{version}-%{release}
@@ -37,6 +38,7 @@ Summary: bin components for the slang package.
 Group: Binaries
 Requires: slang-data = %{version}-%{release}
 Requires: slang-license = %{version}-%{release}
+Requires: slang-filemap = %{version}-%{release}
 
 %description bin
 bin components for the slang package.
@@ -72,11 +74,20 @@ Requires: slang-man = %{version}-%{release}
 doc components for the slang package.
 
 
+%package filemap
+Summary: filemap components for the slang package.
+Group: Default
+
+%description filemap
+filemap components for the slang package.
+
+
 %package lib
 Summary: lib components for the slang package.
 Group: Libraries
 Requires: slang-data = %{version}-%{release}
 Requires: slang-license = %{version}-%{release}
+Requires: slang-filemap = %{version}-%{release}
 
 %description lib
 lib components for the slang package.
@@ -102,24 +113,37 @@ man components for the slang package.
 %setup -q -n slang-2.3.2
 cd %{_builddir}/slang-2.3.2
 %patch1 -p1
+pushd ..
+cp -a slang-2.3.2 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1604602439
+export SOURCE_DATE_EPOCH=1634260837
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 %configure --disable-static --with-readline=gnu
 make  %{?_smp_mflags}  -j1
 
+unset PKG_CONFIG_PATH
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3"
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
+%configure --disable-static --with-readline=gnu
+make  %{?_smp_mflags}  -j1
+popd
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
@@ -128,11 +152,15 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make runtests
 
 %install
-export SOURCE_DATE_EPOCH=1604602439
+export SOURCE_DATE_EPOCH=1634260837
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/slang
 cp %{_builddir}/slang-2.3.2/COPYING %{buildroot}/usr/share/package-licenses/slang/a701894425273989c5e4d14cffb92a26b66cb08a
+pushd ../buildavx2/
+%make_install_v3
+popd
 %make_install
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -140,6 +168,7 @@ cp %{_builddir}/slang-2.3.2/COPYING %{buildroot}/usr/share/package-licenses/slan
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/slsh
+/usr/share/clear/optimized-elf/bin*
 
 %files data
 %defattr(-,root,root,-)
@@ -277,6 +306,10 @@ cp %{_builddir}/slang-2.3.2/COPYING %{buildroot}/usr/share/package-licenses/slan
 /usr/share/doc/slsh/html/slshfun-9.html
 /usr/share/doc/slsh/html/slshfun.html
 
+%files filemap
+%defattr(-,root,root,-)
+/usr/share/clear/filemap/filemap-slang
+
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libslang.so.2
@@ -301,6 +334,7 @@ cp %{_builddir}/slang-2.3.2/COPYING %{buildroot}/usr/share/package-licenses/slan
 /usr/lib64/slang/v2/modules/termios-module.so
 /usr/lib64/slang/v2/modules/varray-module.so
 /usr/lib64/slang/v2/modules/zlib-module.so
+/usr/share/clear/optimized-elf/lib*
 
 %files license
 %defattr(0644,root,root,0755)
