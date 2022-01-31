@@ -6,7 +6,7 @@
 #
 Name     : slang
 Version  : 2.3.2
-Release  : 27
+Release  : 28
 URL      : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source0  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source1  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2.asc
