@@ -6,7 +6,7 @@
 #
 Name     : slang
 Version  : 2.3.2
-Release  : 28
+Release  : 29
 URL      : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source0  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source1  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2.asc
@@ -122,7 +122,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1634260837
+export SOURCE_DATE_EPOCH=1656361658
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -136,9 +136,9 @@ make  %{?_smp_mflags}  -j1
 
 unset PKG_CONFIG_PATH
 pushd ../buildavx2/
-export CFLAGS="$CFLAGS -m64 -march=x86-64-v3"
-export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3"
-export FFLAGS="$FFLAGS -m64 -march=x86-64-v3"
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
 export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3"
 export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
 %configure --disable-static --with-readline=gnu
@@ -152,7 +152,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make runtests
 
 %install
-export SOURCE_DATE_EPOCH=1634260837
+export SOURCE_DATE_EPOCH=1656361658
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/slang
 cp %{_builddir}/slang-2.3.2/COPYING %{buildroot}/usr/share/package-licenses/slang/a701894425273989c5e4d14cffb92a26b66cb08a
@@ -160,7 +160,7 @@ pushd ../buildavx2/
 %make_install_v3
 popd
 %make_install
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -285,6 +285,7 @@ popd
 %defattr(-,root,root,-)
 /usr/include/slang.h
 /usr/include/slcurses.h
+/usr/lib64/glibc-hwcaps/x86-64-v3/libslang.so
 /usr/lib64/libslang.so
 /usr/lib64/pkgconfig/slang.pc
 
@@ -312,6 +313,8 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/glibc-hwcaps/x86-64-v3/libslang.so.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libslang.so.2.3.2
 /usr/lib64/libslang.so.2
 /usr/lib64/libslang.so.2.3.2
 /usr/lib64/slang/v2/modules/base64-module.so
@@ -334,7 +337,6 @@ popd
 /usr/lib64/slang/v2/modules/termios-module.so
 /usr/lib64/slang/v2/modules/varray-module.so
 /usr/lib64/slang/v2/modules/zlib-module.so
-/usr/share/clear/optimized-elf/lib*
 
 %files license
 %defattr(0644,root,root,0755)
