@@ -6,7 +6,7 @@
 #
 Name     : slang
 Version  : 2.3.2
-Release  : 29
+Release  : 30
 URL      : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source0  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2
 Source1  : https://www.jedsoft.org/releases/slang/slang-2.3.2.tar.bz2.asc
@@ -122,7 +122,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1656361658
+export SOURCE_DATE_EPOCH=1656702653
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -152,7 +152,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make runtests
 
 %install
-export SOURCE_DATE_EPOCH=1656361658
+export SOURCE_DATE_EPOCH=1656702653
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/slang
 cp %{_builddir}/slang-2.3.2/COPYING %{buildroot}/usr/share/package-licenses/slang/a701894425273989c5e4d14cffb92a26b66cb08a
@@ -337,6 +337,7 @@ popd
 /usr/lib64/slang/v2/modules/termios-module.so
 /usr/lib64/slang/v2/modules/varray-module.so
 /usr/lib64/slang/v2/modules/zlib-module.so
+/usr/share/clear/optimized-elf/other*
 
 %files license
 %defattr(0644,root,root,0755)
