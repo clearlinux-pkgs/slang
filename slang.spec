@@ -6,7 +6,7 @@
 #
 Name     : slang
 Version  : 2.3.3
-Release  : 32
+Release  : 33
 URL      : https://www.jedsoft.org/releases/slang/slang-2.3.3.tar.bz2
 Source0  : https://www.jedsoft.org/releases/slang/slang-2.3.3.tar.bz2
 Source1  : https://www.jedsoft.org/releases/slang/slang-2.3.3.tar.bz2.asc
@@ -25,6 +25,9 @@ BuildRequires : onig-dev
 BuildRequires : pcre-dev
 BuildRequires : readline-dev
 BuildRequires : zlib-dev
+# Suppress stripping binaries
+%define __strip /bin/true
+%define debug_package %{nil}
 Patch1: stateless.patch
 
 %description
@@ -108,15 +111,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1660064060
+export SOURCE_DATE_EPOCH=1672432194
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto "
-export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
-export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
+export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
 %configure --disable-static --with-readline=gnu
 make  %{?_smp_mflags}
 
@@ -128,10 +131,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make runtests
 
 %install
-export SOURCE_DATE_EPOCH=1660064060
+export SOURCE_DATE_EPOCH=1672432194
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/slang
-cp %{_builddir}/slang-%{version}/COPYING %{buildroot}/usr/share/package-licenses/slang/a701894425273989c5e4d14cffb92a26b66cb08a
+cp %{_builddir}/slang-%{version}/COPYING %{buildroot}/usr/share/package-licenses/slang/a701894425273989c5e4d14cffb92a26b66cb08a || :
 %make_install
 
 %files
